@@ -11,8 +11,10 @@ import org.primefaces.model.StreamedContent;
 
 import com.aspose.pdf.Color;
 import com.aspose.pdf.Document;
+import com.aspose.pdf.Font;
 import com.aspose.pdf.FontRepository;
 import com.aspose.pdf.TextFragment;
+import com.aspose.pdf.TextSegment;
 import com.sproof.sign.api.v1.client.CreateSignatureRequest;
 import com.sproof.sign.api.v1.client.SproofSigner;
 
@@ -59,8 +61,11 @@ public class SproofDemoService {
 		try (var doc = new Document()) {
 			var page = doc.getPages().add();
 
-			page.getParagraphs().add(text("Helvetica", 24, Color.getNavy(), "Document"));
-			page.getParagraphs().add(text("Times", 12, null, LOREMIPSUM));
+			var helvetica = FontRepository.findFont("Helvetica");
+			var times = FontRepository.findFont("Times");
+			var paragraphs = page.getParagraphs();
+			paragraphs.add(fragment(helvetica, 24, Color.getNavy(), "Document"));
+			paragraphs.add(fragment(times, 12, null, LOREMIPSUM));
 
 			try (var os = new ByteArrayOutputStream()) {
 				doc.save(os);
@@ -77,17 +82,29 @@ public class SproofDemoService {
 		try (var doc = new Document()) {
 			var page = doc.getPages().add();
 
-			page.getParagraphs().add(text("Helvetica", 24, Color.getNavy(), "Document with Placeholders"));
-			page.getParagraphs().add(text("Times", 12, null, LOREMIPSUM));
+			var helvetica = FontRepository.findFont("Helvetica");
+			var times = FontRepository.findFont("Times");
+			var helveticaBold = FontRepository.findFont("Helvetica-Bold");
 
-			page.getParagraphs().add(text(null, null, null, ""));
+			var paragraphs = page.getParagraphs();
+			paragraphs.add(fragment(helvetica, 24, Color.getNavy(), "Document with Placeholders"));
+			paragraphs.add(fragment(times, 12, null, LOREMIPSUM));
+
+			paragraphs.add(fragment());
 
 			var signers = createSigners(signer1Email, signer1FirstName, signer1LastName, signer2Email, signer2FirstName, signer2LastName);
 
 			for (var signer : signers) {
-				page.getParagraphs().add(text("Helvetica", 128, null, ""));
-				page.getParagraphs().add(text("Helvetica", 6, Color.getLightGray(), "{sproof{%s, %s, %s, %d, true}sproof}".formatted(signer.getFirstName(), signer.getLastName(), signer.getEmail(), signer.getSigningOrder())));
-				page.getParagraphs().add(text("Helvetica-Bold", null, null, "Signare %d".formatted(signer.getSigningOrder())));
+				paragraphs.add(fragment(helvetica, 128, null, ""));
+				paragraphs.add(fragment(helvetica, 6, Color.fromGray(0.9), "{sproof{%s, %s, %s, %d, true}sproof}".formatted(signer.getFirstName(), signer.getLastName(), signer.getEmail(), signer.getSigningOrder())));
+				paragraphs.add(fragment(helveticaBold, null, null, "Signature %d".formatted(signer.getSigningOrder())));
+				paragraphs.add(fragment(helvetica, 14, null, ""));
+				page.getParagraphs().add(fragment(
+						segment(helvetica, 10, null, "Accept conditions: "),
+						segment(helvetica, 10, Color.fromGray(0.9), "{sp{CB, Acceptance, , %s, true}sp}".formatted(signer.getEmail()))));
+				paragraphs.add(fragment(helvetica, 14, null, ""));
+				paragraphs.add(fragment(helvetica, 12, Color.fromGray(0.9), "{sp{DB, Date, , %s, true}sp}".formatted(signer.getEmail())));
+				paragraphs.add(fragment(helveticaBold, null, null, "Date"));
 			}
 
 			try (var os = new ByteArrayOutputStream()) {
@@ -101,20 +118,46 @@ public class SproofDemoService {
 		}
 	}
 
-	protected TextFragment text(String font, Integer size, Color color, String text) {
-		var textFragment = new TextFragment(text);
+	protected TextFragment fragment(Font font, Integer size, Color color, String text) {
+		var fragment = new TextFragment(text);
 		if(font != null) {
-			textFragment.getTextState().setFont(FontRepository.findFont(font));
+			fragment.getTextState().setFont(font);
 		}
 		if(size != null) {
-			textFragment.getTextState().setFontSize(size);
+			fragment.getTextState().setFontSize(size);
 		}
 		if(color != null) {
-			textFragment.getTextState().setForegroundColor(color);
+			fragment.getTextState().setForegroundColor(color);
 		}
 
-		return textFragment;
+		return fragment;
 	}
+
+	protected TextFragment fragment(TextSegment...segments) {
+		var fragment = new TextFragment("");
+
+		for (var segment : segments) {
+			fragment.getSegments().add(segment);
+		}
+
+		return fragment;
+	}
+
+	protected TextSegment segment(Font font, Integer size, Color color, String text) {
+		var segment = new TextSegment(text);
+		if(font != null) {
+			segment.getTextState().setFont(font);
+		}
+		if(size != null) {
+			segment.getTextState().setFontSize(size);
+		}
+		if(color != null) {
+			segment.getTextState().setForegroundColor(color);
+		}
+
+		return segment;
+	}
+
 
 	/**
 	 * Create a list of signers.
