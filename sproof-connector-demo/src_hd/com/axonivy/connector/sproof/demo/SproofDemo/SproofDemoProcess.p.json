@@ -334,7 +334,7 @@
     }, {
       "id" : "f25",
       "type" : "RestClientCall",
-      "name" : "Get document status.",
+      "name" : "Get document.",
       "config" : {
         "target" : {
           "clientId" : "d39c224c-a0d6-48f7-aa80-4203da324cef",
