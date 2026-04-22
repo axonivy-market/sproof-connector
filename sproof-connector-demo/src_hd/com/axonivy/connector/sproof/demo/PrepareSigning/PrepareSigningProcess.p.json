@@ -3,7 +3,7 @@
   "id" : "19DB06C6712D45BC",
   "kind" : "HTML_DIALOG",
   "config" : {
-    "data" : "com.axonivy.connector.sproof.demo.CreateSigningTask.CreateSigningTaskData"
+    "data" : "com.axonivy.connector.sproof.demo.PrepareSigning.PrepareSigningData"
   },
   "elements" : [ {
       "id" : "f0",
@@ -21,13 +21,14 @@
         "result" : {
           "params" : [
             { "name" : "memberId", "type" : "String", "desc" : "" },
-            { "name" : "signerEmail", "type" : "String", "desc" : "" }
+            { "name" : "signerEmail", "type" : "String", "desc" : "" },
+            { "name" : "docMemberId", "type" : "String", "desc" : "" }
           ],
           "map" : {
             "result.memberId" : "in.memberId",
-            "result.signerEmail" : "in.signerEmail"
-          },
-          "code" : "ivy.log.info(\"memberId: {0}\", result.memberId);"
+            "result.signerEmail" : "in.signerEmail",
+            "result.docMemberId" : "in.docMemberId"
+          }
         },
         "guid" : "19DB06C67137500D"
       },
@@ -54,7 +55,7 @@
     }, {
       "id" : "f6",
       "type" : "HtmlDialogEventStart",
-      "name" : "createSigningTask",
+      "name" : "prepareSigning",
       "config" : {
         "guid" : "19DB06E35894BA45"
       },
@@ -71,14 +72,9 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.sproof.sign.api.v1.client.Recipient;",
-            "import com.sproof.sign.api.v1.client.SignaturePosition;",
-            "import com.sproof.sign.api.v1.client.DocumentRecipientDetails;",
-            "import com.axonivy.connector.sproof.client.DocumentSignerDetails;",
-            "import com.sproof.sign.api.v1.client.SproofSigner;",
+            "import com.axonivy.connector.sproof.service.SproofService;",
             "import com.axonivy.connector.sproof.service.SproofDemoService;",
             "import com.sproof.sign.api.v1.client.Document;",
-            "import com.axonivy.connector.sproof.service.SproofService;",
             "",
             "Binary content = SproofDemoService.get().createDocumentWithPlaceholders(in.signerEmail, in.signerFirstName, in.signerLastName, null, null, null);",
             "",
@@ -92,6 +88,7 @@
             "",
             "in.createSignatureRequest.getEnvelopeData()",
             "  .setUsePlaceholders(true)",
+            "  .setReturnUrl(ivy.html.viewLink(\"bye.xhtml\").getAbsolute())",
             "  .addDocumentDataArrayItem(document);"
           ]
         }
@@ -129,6 +126,7 @@
               "if(result.documents.getFirst() != null) {",
               "  EnvelopeResponseDocuments doc = result.documents.getFirst() as EnvelopeResponseDocuments;",
               "  MemberResponseSchema mrs = doc.members.getFirst() as MemberResponseSchema;",
+              "  in.docMemberId = doc.member.id;",
               "  in.memberId = mrs.id;",
               "}"
             ]

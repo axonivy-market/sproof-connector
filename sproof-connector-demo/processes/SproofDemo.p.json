@@ -7,7 +7,7 @@
   "elements" : [ {
       "id" : "f0",
       "type" : "RequestStart",
-      "name" : "sproofDemo",
+      "name" : "sproofPlayground",
       "config" : {
         "signature" : "sproofDemo",
         "request" : {
@@ -62,12 +62,13 @@
     }, {
       "id" : "f6",
       "type" : "DialogCall",
-      "name" : "Sign directly",
+      "name" : "Prepare signing",
       "config" : {
-        "dialog" : "com.axonivy.connector.sproof.demo.CreateSigningTask:start()",
+        "dialog" : "com.axonivy.connector.sproof.demo.PrepareSigning:start()",
         "output" : {
           "map" : {
             "out" : "in",
+            "out.docMemberId" : "result.docMemberId",
             "out.memberId" : "result.memberId",
             "out.signerEmail" : "result.signerEmail"
           }
@@ -91,12 +92,13 @@
       "type" : "UserTask",
       "name" : "Sign",
       "config" : {
-        "dialog" : "com.axonivy.connector.sproof.demo.Sign:start(String)",
+        "dialog" : "com.axonivy.connector.sproof.demo.Sign:start(String,String)",
         "call" : {
           "map" : {
-            "param.memberId" : "in.memberId"
+            "param.memberId" : "in.memberId",
+            "param.docMemberId" : "in.docMemberId"
           },
-          "code" : "ivy.log.info(\"Calling sign dialog with memberId ''{0}''\", param.memberId);"
+          "code" : "ivy.log.info(\"Calling sign dialog with docMemberId ''{0}'' and memberId ''{1}''\", param.docMemberId, param.memberId);"
         },
         "task" : {
           "name" : "Sign contract: <%=in.signerEmail%>"

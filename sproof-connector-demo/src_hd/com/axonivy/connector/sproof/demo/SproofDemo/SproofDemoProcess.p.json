@@ -188,14 +188,13 @@
       "config" : {
         "output" : {
           "code" : [
+            "import com.sproof.sign.api.v1.client.Document;",
             "import com.sproof.sign.api.v1.client.Recipient;",
             "import com.sproof.sign.api.v1.client.SignaturePosition;",
-            "import com.sproof.sign.api.v1.client.DocumentRecipientDetails;",
-            "import com.axonivy.connector.sproof.client.DocumentSignerDetails;",
             "import com.sproof.sign.api.v1.client.SproofSigner;",
-            "import com.axonivy.connector.sproof.service.SproofDemoService;",
-            "import com.sproof.sign.api.v1.client.Document;",
+            "import com.axonivy.connector.sproof.client.DocumentSignerDetails;",
             "import com.axonivy.connector.sproof.service.SproofService;",
+            "import com.axonivy.connector.sproof.service.SproofDemoService;",
             "",
             "SproofService sproof = SproofService.get();",
             "",

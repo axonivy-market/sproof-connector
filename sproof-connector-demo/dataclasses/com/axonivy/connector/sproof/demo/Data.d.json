@@ -6,5 +6,7 @@
     "name" : "memberId"
   }, {
     "name" : "signerEmail"
+  }, {
+    "name" : "docMemberId"
   } ]
 }
