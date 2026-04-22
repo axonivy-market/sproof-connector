@@ -1,0 +1,19 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/12.0.1/data-class.json",
+  "simpleName" : "PrepareSigningData",
+  "namespace" : "com.axonivy.connector.sproof.demo.PrepareSigning",
+  "fields" : [ {
+    "name" : "signerFirstName"
+  }, {
+    "name" : "signerLastName"
+  }, {
+    "name" : "signerEmail"
+  }, {
+    "name" : "createSignatureRequest",
+    "type" : "com.sproof.sign.api.v1.client.CreateSignatureRequest"
+  }, {
+    "name" : "docMemberId"
+  }, {
+    "name" : "memberId"
+  } ]
+}

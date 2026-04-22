@@ -13,12 +13,12 @@
         "signature" : "start",
         "input" : {
           "map" : {
-            "out.signer1Email" : "\"signer1@sprooftest.axonivy.com\"",
-            "out.signer1FirstName" : "\"Signer\"",
-            "out.signer1LastName" : "\"One\"",
-            "out.signer2Email" : "\"signer2@sprooftest.axonivy.com\"",
-            "out.signer2FirstName" : "\"Signer\"",
-            "out.signer2LastName" : "\"Two\""
+            "out.signer1Email" : "ivy.var.com_axonivy_connector_sproof_demo_signer1Email",
+            "out.signer1FirstName" : "ivy.var.com_axonivy_connector_sproof_demo_signer1FirstName",
+            "out.signer1LastName" : "ivy.var.com_axonivy_connector_sproof_demo_signer1LastName",
+            "out.signer2Email" : "ivy.var.com_axonivy_connector_sproof_demo_signer2Email",
+            "out.signer2FirstName" : "ivy.var.com_axonivy_connector_sproof_demo_signer2FirstName",
+            "out.signer2LastName" : "ivy.var.com_axonivy_connector_sproof_demo_signer2LastName"
           }
         },
         "guid" : "19D255987C0AAB35"
@@ -188,14 +188,13 @@
       "config" : {
         "output" : {
           "code" : [
+            "import com.sproof.sign.api.v1.client.Document;",
             "import com.sproof.sign.api.v1.client.Recipient;",
             "import com.sproof.sign.api.v1.client.SignaturePosition;",
-            "import com.sproof.sign.api.v1.client.DocumentRecipientDetails;",
-            "import com.axonivy.connector.sproof.client.DocumentSignerDetails;",
             "import com.sproof.sign.api.v1.client.SproofSigner;",
-            "import com.axonivy.connector.sproof.service.SproofDemoService;",
-            "import com.sproof.sign.api.v1.client.Document;",
+            "import com.axonivy.connector.sproof.client.DocumentSignerDetails;",
             "import com.axonivy.connector.sproof.service.SproofService;",
+            "import com.axonivy.connector.sproof.service.SproofDemoService;",
             "",
             "SproofService sproof = SproofService.get();",
             "",
@@ -335,7 +334,7 @@
     }, {
       "id" : "f25",
       "type" : "RestClientCall",
-      "name" : "Get document status.",
+      "name" : "Get document.",
       "config" : {
         "target" : {
           "clientId" : "d39c224c-a0d6-48f7-aa80-4203da324cef",

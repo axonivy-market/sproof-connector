@@ -1,0 +1,66 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:ic="http://ivyteam.ch/jsf/component" xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/layouts/frame-10-full-width.xhtml">
+		<ui:define name="title">Sign</ui:define>
+		<ui:define name="content">
+			<h:form id="form">
+				<p:growl showDetail="true" skipDetailIfEqualsSummary="true" />
+				<div class="ui-fluid">
+					<p:outputPanel rendered="#{empty data.method}">
+						<div class="grid">
+							<div class="col-12 md:col-12 lg:col-4 p-text-right">
+								<p:commandButton value="Sign in a new Browser Tab" actionListener="#{logic.signInNewTab}" update="@form" oncomplete="window.open('https://sign.sproof.com/#/editor/#{data.memberId}', '_blank');"/>
+							</div>
+							<div class="col-12 md:col-12 lg:col-4 p-text-right">
+							</div>
+							<div class="col-12 md:col-12 lg:col-4 p-text-right">
+								<p:commandButton value="Sign in an embedded IFrame" actionListener="#{logic.signInIFrame}" update="@form" />
+							</div>
+						</div>
+					</p:outputPanel>
+					<p:fieldset legend="Fetch" rendered="#{not empty data.method}">
+						<div class="grid">
+							<div class="col-12 md:col-12 lg:col-4 p-text-right">
+								<p:outputLabel for="@next" value="Signed"/>
+								<p:inputText value="#{data.member.signedAt}" readonly="true"/>
+							</div>
+							<div class="col-12 md:col-12 lg:col-4 p-text-right">
+								<p:outputLabel for="@next" value="Declined"/>
+								<p:inputText value="#{data.member.declinedAt}" readonly="true"/>
+							</div>
+						</div>
+						<div class="grid">
+							<div class="col-12 md:col-12 lg:col-2 p-text-right">
+								<p:commandButton value="Fetch from Sproof" actionListener="#{logic.fetchFromSproof}" icon="pi pi-download" update="@form" />
+							</div>
+						</div>
+						<p:outputPanel rendered="#{data.method == 'tab'}">
+							<div class="grid">
+								<div class="col-12 md:col-12 lg:col-12 p-text-right">
+									<pe:documentViewer height="500" value="#{data.streamedContent}" zoom="page-width" />
+								</div>
+							</div>
+						</p:outputPanel>
+					</p:fieldset>
+				</div>
+				<p:fieldset legend="Sign in embedded IFrame" rendered="#{data.method == 'iframe'}">
+					<iframe src="https://sign.sproof.com/#/editor/#{data.memberId}" width="100%" height="800" />
+				</p:fieldset>
+				<p:spacer height="2em"/>
+				<p:toolbar>
+		        	<p:toolbarGroup align="left">
+						<p:commandButton value="Finish workflow" actionListener="#{logic.close}" icon="pi pi-sign-out" update="@form" rendered="#{not empty data.method}" disabled="#{data.member.signedAt == null and data.member.declinedAt == null}"/>
+		        	</p:toolbarGroup>
+        			<p:toolbarGroup align="right">
+						<p:commandLink id="cancel" actionListener="#{ivyWorkflowView.cancel()}" process="@this" value="Cancel" />
+			        </p:toolbarGroup>
+    			</p:toolbar>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+
+</html>

@@ -7,11 +7,11 @@
   "elements" : [ {
       "id" : "f0",
       "type" : "RequestStart",
-      "name" : "sproofDemo",
+      "name" : "sproofPlayground",
       "config" : {
         "signature" : "sproofDemo",
         "request" : {
-          "name" : "Sproof Demo"
+          "name" : "Technical Sproof Demo and Playground"
         }
       },
       "tags" : [
@@ -42,6 +42,73 @@
       },
       "connect" : [
         { "id" : "f4", "to" : "f1", "color" : "default" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "RequestStart",
+      "name" : "signDirectly",
+      "config" : {
+        "signature" : "signDirectly",
+        "request" : {
+          "name" : "Create signing task"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 160 }
+      },
+      "connect" : [
+        { "id" : "f7", "to" : "f6" }
+      ]
+    }, {
+      "id" : "f6",
+      "type" : "DialogCall",
+      "name" : "Prepare signing",
+      "config" : {
+        "dialog" : "com.axonivy.connector.sproof.demo.PrepareSigning:start()",
+        "output" : {
+          "map" : {
+            "out" : "in",
+            "out.docMemberId" : "result.docMemberId",
+            "out.memberId" : "result.memberId",
+            "out.signerEmail" : "result.signerEmail"
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 160 }
+      },
+      "connect" : [
+        { "id" : "f9", "to" : "f12" }
+      ]
+    }, {
+      "id" : "f8",
+      "type" : "TaskEnd",
+      "visual" : {
+        "at" : { "x" : 512, "y" : 160 },
+        "labelOffset" : { "x" : 13, "y" : 33 }
+      }
+    }, {
+      "id" : "f12",
+      "type" : "UserTask",
+      "name" : "Sign",
+      "config" : {
+        "dialog" : "com.axonivy.connector.sproof.demo.Sign:start(String,String)",
+        "call" : {
+          "map" : {
+            "param.memberId" : "in.memberId",
+            "param.docMemberId" : "in.docMemberId"
+          },
+          "code" : "ivy.log.info(\"Calling sign dialog with docMemberId ''{0}'' and memberId ''{1}''\", param.docMemberId, param.memberId);"
+        },
+        "task" : {
+          "name" : "Sign contract: <%=in.signerEmail%>"
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 392, "y" : 160 }
+      },
+      "connect" : [
+        { "id" : "f13", "to" : "f8" }
       ]
     } ]
 }
