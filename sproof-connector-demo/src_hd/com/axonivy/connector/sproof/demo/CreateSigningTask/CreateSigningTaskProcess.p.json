@@ -13,9 +13,9 @@
         "signature" : "start",
         "input" : {
           "map" : {
-            "out.signerEmail" : "\"signer1@sprooftest.axonivy.com\"",
-            "out.signerFirstName" : "\"Signer\"",
-            "out.signerLastName" : "\"One\""
+            "out.signerEmail" : "ivy.var.com_axonivy_connector_sproof_demo_signer1Email",
+            "out.signerFirstName" : "ivy.var.com_axonivy_connector_sproof_demo_signer1FirstName",
+            "out.signerLastName" : "ivy.var.com_axonivy_connector_sproof_demo_signer1LastName"
           }
         },
         "result" : {
@@ -82,6 +82,7 @@
             "",
             "Binary content = SproofDemoService.get().createDocumentWithPlaceholders(in.signerEmail, in.signerFirstName, in.signerLastName, null, null, null);",
             "",
+            "ivy.case.documents().add(\"contract.pdf\").write().withContentFrom(content);",
             "",
             "SproofService sproof = SproofService.get();",
             "",

@@ -13,12 +13,12 @@
         "signature" : "start",
         "input" : {
           "map" : {
-            "out.signer1Email" : "\"signer1@sprooftest.axonivy.com\"",
-            "out.signer1FirstName" : "\"Signer\"",
-            "out.signer1LastName" : "\"One\"",
-            "out.signer2Email" : "\"signer2@sprooftest.axonivy.com\"",
-            "out.signer2FirstName" : "\"Signer\"",
-            "out.signer2LastName" : "\"Two\""
+            "out.signer1Email" : "ivy.var.com_axonivy_connector_sproof_demo_signer1Email",
+            "out.signer1FirstName" : "ivy.var.com_axonivy_connector_sproof_demo_signer1FirstName",
+            "out.signer1LastName" : "ivy.var.com_axonivy_connector_sproof_demo_signer1LastName",
+            "out.signer2Email" : "ivy.var.com_axonivy_connector_sproof_demo_signer2Email",
+            "out.signer2FirstName" : "ivy.var.com_axonivy_connector_sproof_demo_signer2FirstName",
+            "out.signer2LastName" : "ivy.var.com_axonivy_connector_sproof_demo_signer2LastName"
           }
         },
         "guid" : "19D255987C0AAB35"

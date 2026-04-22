@@ -8,7 +8,8 @@
     <ui:define name="content">
       <h:form id="form">
         <p:messages />
-        <iframe src="https://sign.sproof.com/#/editor/#{data.memberId}" width="100%" height="800"/>
+        <p:linkButton href="https://sign.sproof.com/#/editor/#{data.memberId}" target="_blank" value="Open Document in Sproof"/>
+        <!-- <iframe src="https://sign.sproof.com/#/editor/#{data.memberId}" width="100%" height="800"/> -->
       </h:form>
 
     </ui:define>

@@ -11,7 +11,7 @@
       "config" : {
         "signature" : "sproofDemo",
         "request" : {
-          "name" : "Sproof Demo"
+          "name" : "Technical Sproof Demo and Playground"
         }
       },
       "tags" : [
@@ -50,7 +50,7 @@
       "config" : {
         "signature" : "signDirectly",
         "request" : {
-          "name" : "Sign from application"
+          "name" : "Create signing task"
         }
       },
       "visual" : {

@@ -1,2 +1,19 @@
 # yaml-language-server: $schema=https://json-schema.axonivy.com/app/12.0.0/variables.json
 Variables:
+  com:
+    axonivy:
+      connector:
+        sproof:
+          demo:
+            # Signer 1 first name
+            signer1FirstName: Signer
+            # Signer 1 last name
+            signer1LastName: One
+            # Signer 1 Email
+            signer1Email: signer1@sprooftest.axonivy.com
+            # Signer 2 first name
+            signer2FirstName: Signer
+            # Signer 2 last name
+            signer2LastName: Two
+            # Signer 2 Email
+            signer2Email: signer2@sprooftest.axonivy.com
