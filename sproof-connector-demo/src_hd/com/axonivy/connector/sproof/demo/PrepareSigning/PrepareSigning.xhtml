@@ -30,15 +30,10 @@
 						</div>
 					</p:fieldset>
 					<p:spacer height="1em"></p:spacer>
-					<div class="grid">
-						<div class="col-12 md:col-12 lg:col-10 p-text-right">
-						</div>
-						<div class="col-12 md:col-12 lg:col-2 p-text-right">
-							<p:commandButton value="Create signing task" actionListener="#{logic.prepareSigning}"/>
-						</div>
-					</div>
 				</div>
 				<div class="command-btns">
+					<p:commandButton value="Create signing task" actionListener="#{logic.prepareSigning}"/>
+					<p:spacer width="1em"/>
 					<p:commandLink id="cancel"
 						actionListener="#{ivyWorkflowView.cancel()}" process="@this"
 						value="Cancel" />

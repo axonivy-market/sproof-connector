@@ -17,5 +17,8 @@
   }, {
     "name" : "member",
     "type" : "com.sproof.sign.api.v1.client.SproofMember"
+  }, {
+    "name" : "close",
+    "type" : "Boolean"
   } ]
 }
