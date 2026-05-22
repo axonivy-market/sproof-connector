@@ -69,13 +69,13 @@ Sproof's *Quick access* dialog guides the signer through the required fields. In
 
 After all three fields have been filled (shown as 3/3 in the Sproof header), the **Continue to Sign** button becomes active. Clicking it submits the signature to Sproof.
 
-![All fields completed — continue to sign](images/task6.png)
+![All fields completed — continue to sign](images/task5.png)
 
 #### Step 6: Signature confirmed
 
 Sproof displays a *Thank you for your signature!* confirmation inside the embedded IFrame. From here the signer can go to the Sproof dashboard or download the signed document. Clicking **Close** dismisses the confirmation and returns to the AxonIvy task view.
 
-![Signature confirmed](images/task5.png)
+![Signature confirmed](images/task6.png)
 
 #### Step 7: Finishing the workflow
 
