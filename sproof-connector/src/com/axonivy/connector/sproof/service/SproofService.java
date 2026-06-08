@@ -90,8 +90,4 @@ public class SproofService {
 				.fileName(fileName)
 				.data(Base64.getEncoder().encodeToString(fileContent));
 	}
-
-	public static void main(String[] args) {
-
-	}
 }
