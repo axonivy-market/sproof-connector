@@ -64,8 +64,9 @@
 						<div class="col-12 md:col-12 lg:col-4 p-text-right">
 						</div>
 						<div class="col-12 md:col-12 lg:col-4 p-text-right">
-							<p:commandButton actionListener="#{logic.send}" disabled="#{data.usePlaceholders == null}"
-								value="#{data.usePlaceholders == null ? 'Create before sending' : data.usePlaceholders ? 'Send to Sproof for Signing with placeholders' : 'Send to Sproof for Signing'}" update="form" />
+							<p:commandButton disabled="true" rendered="#{data.usePlaceholders == null}" value="Create before sending"/>
+							<p:commandButton actionListener="#{logic.send}" rendered="#{data.usePlaceholders != null}"
+								value="#{data.usePlaceholders ? 'Send to Sproof for Signing with placeholders' : 'Send to Sproof for Signing'}" update="form" />
 						</div>
 					</div>
 					<div class="grid">
@@ -73,7 +74,7 @@
 						</div>
 						<div class="col-12 md:col-12 lg:col-4 p-text-right">
 							<p:outputLabel for="@next" value="Member Id of signature request"/>
-							<p:inputText value="#{data.memberId}" update="form"/>
+							<p:inputText value="#{data.memberId}"/>
 						</div>
 					</div>
 					<div class="grid">
