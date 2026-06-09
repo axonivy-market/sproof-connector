@@ -23,6 +23,9 @@ import ch.ivyteam.ivy.addons.docfactory.aspose.LicenseLoader;
 import ch.ivyteam.ivy.bpm.error.BpmError;
 import ch.ivyteam.ivy.environment.Ivy;
 
+/**
+ * Demo service for the Sproof connector, providing PDF document creation and signer management.
+ */
 public class SproofDemoService {
 	private static final SproofDemoService INSTANCE = new SproofDemoService();
 
@@ -45,10 +48,16 @@ public class SproofDemoService {
 			+ "Pellentesque nibh. Aenean quam. In scelerisque sem at dolor. Maecenas mattis. "
 			+ "Sed convallis tristique sem. Proin ut ligula vel nunc egestas porttitor.";
 
+	/**
+	 * Returns the singleton instance of this service.
+	 */
 	public static SproofDemoService get() {
 		return INSTANCE;
 	}
 
+	/**
+	 * Wraps PDF byte content as a {@link StreamedContent} suitable for browser download.
+	 */
 	public StreamedContent createStreamedContent(String name, byte[] content) {
 		return DefaultStreamedContent.builder()
 				.contentType("application/pdf")
@@ -57,6 +66,9 @@ public class SproofDemoService {
 				.build();
 	}
 
+	/**
+	 * Creates a simple demo PDF document with a Lorem Ipsum paragraph.
+	 */
 	public byte[] createDocument() {
 		try (var doc = new Document()) {
 			var page = doc.getPages().add();
@@ -78,6 +90,12 @@ public class SproofDemoService {
 		}
 	}
 
+	/**
+	 * Creates a demo PDF with embedded sproof signature placeholder fields for up to two signers.
+	 *
+	 * <p>Only signers where all three fields (email, first name, last name) are non-blank are included.
+	 * The placeholders follow the sproof tag syntax and are rendered nearly invisible (light gray, small font).
+	 */
 	public byte[] createDocumentWithPlaceholders(String signer1Email, String signer1FirstName, String signer1LastName, String signer2Email, String signer2FirstName, String signer2LastName) {
 		try (var doc = new Document()) {
 			var page = doc.getPages().add();
@@ -86,6 +104,7 @@ public class SproofDemoService {
 			var times = FontRepository.findFont("Times");
 			var helveticaBold = FontRepository.findFont("Helvetica-Bold");
 
+			// Build visible document content (title + body text)
 			var paragraphs = page.getParagraphs();
 			paragraphs.add(fragment(helvetica, 24, Color.getNavy(), "Document with Placeholders"));
 			paragraphs.add(fragment(times, 12, null, LOREMIPSUM));
@@ -95,10 +114,12 @@ public class SproofDemoService {
 			var signers = createSigners(signer1Email, signer1FirstName, signer1LastName, signer2Email, signer2FirstName, signer2LastName);
 
 			for (var signer : signers) {
+				// The {sproof{...}sproof} tag is the signature field placeholder; font size 6 + near-white color keeps it invisible to readers
 				paragraphs.add(fragment(helvetica, 128, null, ""));
 				paragraphs.add(fragment(helvetica, 6, Color.fromGray(0.9), "{sproof{%s, %s, %s, %d, true}sproof}".formatted(signer.getFirstName(), signer.getLastName(), signer.getEmail(), signer.getSigningOrder())));
 				paragraphs.add(fragment(helveticaBold, null, null, "Signature %d".formatted(signer.getSigningOrder())));
 				paragraphs.add(fragment(helvetica, 14, null, ""));
+				// {sp{CB,...}sp} = checkbox field, {sp{DB,...}sp} = date field; same invisible-rendering trick
 				page.getParagraphs().add(fragment(
 						segment(helvetica, 10, null, "Accept conditions: "),
 						segment(helvetica, 10, Color.fromGray(0.9), "{sp{CB, Acceptance, , %s, true}sp}".formatted(signer.getEmail()))));
@@ -160,15 +181,9 @@ public class SproofDemoService {
 
 
 	/**
-	 * Create a list of signers.
-	 * 
-	 * @param signer1Email
-	 * @param signer1FirstName
-	 * @param signer1LastName
-	 * @param signer2Email
-	 * @param signer2FirstName
-	 * @param signer2LastName
-	 * @return
+	 * Creates a list of {@link SproofSigner} objects from the provided data for up to two signers.
+	 *
+	 * <p>Signers with any blank field (email, first name, or last name) are silently skipped.
 	 */
 	public List<SproofSigner> createSigners(String signer1Email, String signer1FirstName, String signer1LastName,
 			String signer2Email, String signer2FirstName, String signer2LastName) {
@@ -195,6 +210,9 @@ public class SproofDemoService {
 				.signingOrder(signingOrder);
 	}
 
+	/**
+	 * Logs the given {@link CreateSignatureRequest} at INFO level for debugging purposes.
+	 */
 	public void check(CreateSignatureRequest rq) {
 		Ivy.log().info("Req: {0}", rq);
 	}
