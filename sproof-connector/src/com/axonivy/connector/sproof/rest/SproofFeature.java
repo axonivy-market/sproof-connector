@@ -6,6 +6,7 @@ import javax.ws.rs.Priorities;
 import javax.ws.rs.core.FeatureContext;
 import javax.ws.rs.core.MediaType;
 
+import com.axonivy.connector.sproof.client.BoxValue;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -19,6 +20,7 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
+import com.sproof.sign.api.v1.client.AnyOfDocumentResponseBoxValue;
 import com.sproof.sign.api.v1.client.AnyOfSproofMemberSignaturePosition;
 import com.sproof.sign.api.v1.client.DocumentRecipientDetails;
 import com.sproof.sign.api.v1.client.MemberSignaturePositionResponse;
@@ -30,9 +32,13 @@ import ch.ivyteam.ivy.rest.client.mapper.JsonFeature;
  * This feature fixes some openapi problems with a strongly typed language like Java.
  */
 public class SproofFeature extends JsonFeature {
+	/**
+	 * The module with deserializers registered for missing types. 
+	 */
 	public static SimpleModule SPROOF_MODULE = new SproofModule()
 			.addDeserializer(MemberSignaturePositionResponse.class, new MemberSignaturePositionResponseDeserializer())
-			.addDeserializer(AnyOfSproofMemberSignaturePosition.class, new AnyOfSproofMemberSignaturePositionDeserializer());
+			.addDeserializer(AnyOfSproofMemberSignaturePosition.class, new AnyOfSproofMemberSignaturePositionDeserializer())
+			.addDeserializer(AnyOfDocumentResponseBoxValue.class, new AnyOfDocumentResponseBoxValueDeserializer());
 
 	@Override
 	public boolean configure(FeatureContext context) {
@@ -70,6 +76,7 @@ public class SproofFeature extends JsonFeature {
 			mapper.addMixIn(DocumentRecipientDetails.class, NoTypeInfoMixIn.class);
 			mapper.addMixIn(MemberSignaturePositionResponse.class, NoTypeInfoMixIn.class);
 			mapper.addMixIn(AnyOfSproofMemberSignaturePosition.class, NoTypeInfoMixIn.class);
+			mapper.addMixIn(AnyOfDocumentResponseBoxValue.class, NoTypeInfoMixIn.class);
 			mapper.enable(StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION.mappedFeature());
 		}
 	}
@@ -126,6 +133,26 @@ public class SproofFeature extends JsonFeature {
 				node = node.get(0);
 			}
 			return parser.getCodec().treeToValue(node, SignaturePositionResponse.class);
+		}
+	}
+
+	/**
+	 * Parse boxes.
+	 *
+	 * The type information of the box is not sent correctly and must be determined by looking into the stream.
+	 */
+	public static class AnyOfDocumentResponseBoxValueDeserializer extends StdDeserializer<AnyOfDocumentResponseBoxValue> {
+		private static final long serialVersionUID = 1L;
+
+		protected AnyOfDocumentResponseBoxValueDeserializer() {
+			super(AnyOfDocumentResponseBoxValue.class);
+		}
+
+		@Override
+		public AnyOfDocumentResponseBoxValue deserialize(JsonParser parser, DeserializationContext ctx) throws IOException, JacksonException {
+			var value = new BoxValue();
+			value.setValue(parser.getCodec().readTree(parser));
+			return value;
 		}
 	}
 

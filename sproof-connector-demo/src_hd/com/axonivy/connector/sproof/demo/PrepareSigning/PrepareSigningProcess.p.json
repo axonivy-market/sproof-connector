@@ -1,0 +1,143 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/process/12.0.0/process.json",
+  "id" : "19DB06C6712D45BC",
+  "kind" : "HTML_DIALOG",
+  "config" : {
+    "data" : "com.axonivy.connector.sproof.demo.PrepareSigning.PrepareSigningData"
+  },
+  "elements" : [ {
+      "id" : "f0",
+      "type" : "HtmlDialogStart",
+      "name" : "start()",
+      "config" : {
+        "signature" : "start",
+        "input" : {
+          "map" : {
+            "out.signerEmail" : "ivy.var.com_axonivy_connector_sproof_demo_signer1Email",
+            "out.signerFirstName" : "ivy.var.com_axonivy_connector_sproof_demo_signer1FirstName",
+            "out.signerLastName" : "ivy.var.com_axonivy_connector_sproof_demo_signer1LastName"
+          }
+        },
+        "result" : {
+          "params" : [
+            { "name" : "memberId", "type" : "String", "desc" : "" },
+            { "name" : "signerEmail", "type" : "String", "desc" : "" },
+            { "name" : "docMemberId", "type" : "String", "desc" : "" }
+          ],
+          "map" : {
+            "result.memberId" : "in.memberId",
+            "result.signerEmail" : "in.signerEmail",
+            "result.docMemberId" : "in.docMemberId"
+          }
+        },
+        "guid" : "19DB06C67137500D"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 64 }
+      },
+      "connect" : [
+        { "id" : "f2", "to" : "f1" }
+      ]
+    }, {
+      "id" : "f1",
+      "type" : "HtmlDialogEnd",
+      "visual" : {
+        "at" : { "x" : 224, "y" : 64 },
+        "labelOffset" : { "x" : 10, "y" : 30 }
+      }
+    }, {
+      "id" : "f4",
+      "type" : "HtmlDialogExit",
+      "visual" : {
+        "at" : { "x" : 512, "y" : 160 },
+        "labelOffset" : { "x" : 10, "y" : 30 }
+      }
+    }, {
+      "id" : "f6",
+      "type" : "HtmlDialogEventStart",
+      "name" : "prepareSigning",
+      "config" : {
+        "guid" : "19DB06E35894BA45"
+      },
+      "visual" : {
+        "at" : { "x" : 96, "y" : 160 }
+      },
+      "connect" : [
+        { "id" : "f8", "to" : "f3" }
+      ]
+    }, {
+      "id" : "f3",
+      "type" : "Script",
+      "name" : "Prepare signature request",
+      "config" : {
+        "output" : {
+          "code" : [
+            "import com.axonivy.connector.sproof.service.SproofService;",
+            "import com.axonivy.connector.sproof.service.SproofDemoService;",
+            "import com.sproof.sign.api.v1.client.Document;",
+            "",
+            "Binary content = SproofDemoService.get().createDocumentWithPlaceholders(in.signerEmail, in.signerFirstName, in.signerLastName, null, null, null);",
+            "",
+            "ivy.case.documents().add(\"contract.pdf\").write().withContentFrom(content);",
+            "",
+            "SproofService sproof = SproofService.get();",
+            "",
+            "in.createSignatureRequest = sproof.createCreateSignatureRequest();",
+            "",
+            "Document document = sproof.createDocumentData(\"Contract\", content);",
+            "",
+            "in.createSignatureRequest.getEnvelopeData()",
+            "  .setUsePlaceholders(true)",
+            "  .setReturnUrl(ivy.html.viewLink(\"bye.xhtml\").getAbsolute())",
+            "  .addDocumentDataArrayItem(document);"
+          ]
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 224, "y" : 160 }
+      },
+      "connect" : [
+        { "id" : "f5", "to" : "f7", "color" : "default" }
+      ]
+    }, {
+      "id" : "f7",
+      "type" : "RestClientCall",
+      "name" : "Create signature request",
+      "config" : {
+        "method" : "POST",
+        "target" : {
+          "clientId" : "d39c224c-a0d6-48f7-aa80-4203da324cef",
+          "path" : "/documents/signature"
+        },
+        "body" : {
+          "entity" : {
+            "type" : "com.sproof.sign.api.v1.client.CreateSignatureRequest",
+            "map" : {
+              "param" : "in.createSignatureRequest"
+            }
+          }
+        },
+        "response" : {
+          "entity" : {
+            "type" : "com.sproof.sign.api.v1.client.EnvelopeResponse",
+            "code" : [
+              "import com.sproof.sign.api.v1.client.MemberResponseSchema;",
+              "import com.sproof.sign.api.v1.client.EnvelopeResponseDocuments;",
+              "if(result.documents.getFirst() != null) {",
+              "  EnvelopeResponseDocuments doc = result.documents.getFirst() as EnvelopeResponseDocuments;",
+              "  MemberResponseSchema mrs = doc.members.getFirst() as MemberResponseSchema;",
+              "  in.docMemberId = doc.member.id;",
+              "  in.memberId = mrs.id;",
+              "}"
+            ]
+          }
+        }
+      },
+      "visual" : {
+        "at" : { "x" : 384, "y" : 160 }
+      },
+      "connect" : [
+        { "id" : "f9", "to" : "f4", "color" : "default" }
+      ]
+    } ]
+}

@@ -1,0 +1,24 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/12.0.1/data-class.json",
+  "simpleName" : "SignData",
+  "namespace" : "com.axonivy.connector.sproof.demo.Sign",
+  "fields" : [ {
+    "name" : "memberId"
+  }, {
+    "name" : "method"
+  }, {
+    "name" : "docMemberId"
+  }, {
+    "name" : "fileContent",
+    "type" : "Binary"
+  }, {
+    "name" : "streamedContent",
+    "type" : "org.primefaces.model.StreamedContent"
+  }, {
+    "name" : "member",
+    "type" : "com.sproof.sign.api.v1.client.SproofMember"
+  }, {
+    "name" : "close",
+    "type" : "Boolean"
+  } ]
+}

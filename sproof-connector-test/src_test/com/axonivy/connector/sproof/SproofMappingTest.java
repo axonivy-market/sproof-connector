@@ -7,6 +7,7 @@ import java.time.OffsetDateTime;
 
 import org.junit.jupiter.api.Test;
 
+import com.axonivy.connector.sproof.client.BoxValue;
 import com.axonivy.connector.sproof.rest.SproofFeature;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -51,11 +52,11 @@ public class SproofMappingTest {
 		var envRsp = MAPPER.readValue(SproofMessages.SIG_RQ_RSP_1, EnvelopeResponse.class);
 		var members = envRsp.getDocuments().get(0).getMembers();
 		assertThat(members).extracting("email")
-				.containsExactlyInAnyOrder(
-						"signer1@sprooftest.axonivy.com",
-						"signer2@sprooftest.axonivy.com");
+		.containsExactlyInAnyOrder(
+				"signer1@sprooftest.axonivy.com",
+				"signer2@sprooftest.axonivy.com");
 		assertThat(members).extracting("signingOrder")
-				.containsExactlyInAnyOrder(BigDecimal.ONE, new BigDecimal("2"));
+		.containsExactlyInAnyOrder(BigDecimal.ONE, new BigDecimal("2"));
 	}
 
 	/**
@@ -73,6 +74,29 @@ public class SproofMappingTest {
 		assertThat(pos.getX()).isEqualByComparingTo("0.151");
 		assertThat(pos.getY()).isEqualByComparingTo("0.23400003");
 		assertThat(pos.getPage()).isEqualTo(0);
+	}
+
+	@Test
+	public void testParsingSigRqRsp2() throws JsonMappingException, JsonProcessingException {
+		var envRsp = MAPPER.readValue(SproofMessages.SIG_RQ_RSP_2, EnvelopeResponse.class);
+		assertThat(envRsp).isNotNull();
+
+		var doc = envRsp.getDocuments().getFirst();
+
+		assertThat(doc).isNotNull();
+		assertThat(doc.getBoxes().size()).isEqualTo(4);
+
+		assertThat(doc.getBoxes().get(0).getType()).isEqualTo("dateBox");
+		assertThat(doc.getBoxes().get(0).getValue()).isInstanceOf(BoxValue.class);
+
+		assertThat(doc.getBoxes().get(1).getType()).isEqualTo("dateBox");
+		assertThat(doc.getBoxes().get(1).getValue()).isInstanceOf(BoxValue.class);
+
+		assertThat(doc.getBoxes().get(2).getType()).isEqualTo("checkBox");
+		assertThat(doc.getBoxes().get(2).getValue()).isInstanceOf(BoxValue.class);
+
+		assertThat(doc.getBoxes().get(2).getType()).isEqualTo("checkBox");
+		assertThat(doc.getBoxes().get(2).getValue()).isInstanceOf(BoxValue.class);
 	}
 
 	@Test
@@ -113,7 +137,7 @@ public class SproofMappingTest {
 
 	@Test
 	public void testParsingGetDocRsp2() throws JsonMappingException, JsonProcessingException {
-		var envRsp = MAPPER.readValue(SproofMessages.GET_DOC_RSP_2, EnvelopeResponse.class);
+		var envRsp = MAPPER.readValue(SproofMessages.GET_DOC_RSP_2, SproofDocument.class);
 		assertThat(envRsp).isNotNull();
 	}
 
@@ -129,7 +153,7 @@ public class SproofMappingTest {
 				.findFirst().orElseThrow();
 		assertThat(signedMember.getSignaturePosition()).isNull();
 		assertThat(signedMember.getSignedAt())
-				.isEqualTo(OffsetDateTime.parse("2026-04-02T15:19:25.942Z"));
+		.isEqualTo(OffsetDateTime.parse("2026-04-02T15:19:25.942Z"));
 	}
 
 	/**
@@ -143,5 +167,28 @@ public class SproofMappingTest {
 				.findFirst().orElseThrow();
 		assertThat(signedMember.getSignatures()).hasSize(1);
 		assertThat(signedMember.getSignatures().get(0).getSignatureType()).isEqualTo("aes_sproof");
+	}
+
+	@Test
+	public void testParsingGetDocRsp3() throws JsonMappingException, JsonProcessingException {
+		var envRsp = MAPPER.readValue(SproofMessages.GET_DOC_RSP_3, SproofDocument.class);
+		assertThat(envRsp).isNotNull();
+
+		assertThat(envRsp.getBoxes().size()).isEqualTo(4);
+
+		assertThat(envRsp.getBoxes().get(0).getType()).isEqualTo("dateBox");
+		assertThat(envRsp.getBoxes().get(0).getValue()).isNull();
+
+		assertThat(envRsp.getBoxes().get(1).getType()).isEqualTo("checkBox");
+		assertThat(envRsp.getBoxes().get(1).getValue()).isInstanceOf(BoxValue.class);
+		assertThat(((BoxValue)envRsp.getBoxes().get(1).getValue()).getValue().asBoolean()).isTrue();
+
+		assertThat(envRsp.getBoxes().get(2).getType()).isEqualTo("checkBox");
+		assertThat(envRsp.getBoxes().get(2).getValue()).isInstanceOf(BoxValue.class);
+		assertThat(((BoxValue)envRsp.getBoxes().get(2).getValue()).getValue().asBoolean()).isFalse();
+
+		assertThat(envRsp.getBoxes().get(3).getType()).isEqualTo("dateBox");
+		assertThat(envRsp.getBoxes().get(3).getValue()).isInstanceOf(BoxValue.class);
+		assertThat(((BoxValue)envRsp.getBoxes().get(3).getValue()).getValue().asText()).isEqualTo("2026-04-22");
 	}
 }
