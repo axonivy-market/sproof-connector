@@ -3,7 +3,7 @@
   <groupId>com.axonivy.connector.sproof</groupId>
   <name>sproof-connector</name>
   <artifactId>sproof-connector-modules</artifactId>
-  <version>12.0.14-SNAPSHOT</version>
+  <version>13.2.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <modules>
