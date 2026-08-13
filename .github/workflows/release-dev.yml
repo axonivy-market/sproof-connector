@@ -9,7 +9,7 @@ on:
         description: Dry run mode for release and cleanup
         type: boolean
         required: false
-        default: true
+        default: false
   push:
     branches:
       - feature/MARP-4636-introduce-nightly-release-builds
