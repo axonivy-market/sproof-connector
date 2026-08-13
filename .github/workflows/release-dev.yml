@@ -9,7 +9,7 @@ on:
         description: Dry run mode for release and cleanup
         type: boolean
         required: false
-        default: false
+        default: true
   push:
     branches:
       - feature/MARP-4636-introduce-nightly-release-builds
@@ -23,5 +23,5 @@ jobs:
   build:
     uses: axonivy-market/github-workflows/.github/workflows/release-dev.yml@feature/MARP-4636-introduce-nightly-release-builds
     with:
-      dryRun: ${{ fromJSON(github.event_name == 'schedule' && 'false' || github.event_name == 'workflow_dispatch' && github.event.inputs.dryRun || 'true') }}
+      dryRun: ${{ fromJSON(github.event_name == 'schedule' && 'false' || github.event_name == 'workflow_dispatch' && github.event.inputs.dryRun || 'false') }}
 
