@@ -10,9 +10,6 @@ on:
         type: boolean
         required: false
         default: true
-  push:
-    branches:
-      - feature/MARP-4636-introduce-nightly-release-builds
 
 permissions:
   contents: read
@@ -20,8 +17,9 @@ permissions:
   packages: write
 
 jobs:
-  build:
+  release:
     uses: axonivy-market/github-workflows/.github/workflows/release-dev.yml@v6
     with:
       dryRun: ${{ fromJSON(github.event_name == 'schedule' && 'false' || github.event_name == 'workflow_dispatch' && github.event.inputs.dryRun || 'true') }}
+    secrets: inherit
 
